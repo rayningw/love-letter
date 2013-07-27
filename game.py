@@ -11,7 +11,7 @@ card_names = {
   8:'Princess'
 }
 
-all_cards = 5*[1] + 2*[2,3,4,5] + [6,7,8]
+full_deck = 5*[1] + 2*[2,3,4,5] + [6,7,8]
 targetting_cards = [1,2,3,5,6]
 must_target_others = [1,2,3,6]
 
@@ -58,6 +58,11 @@ class Player:
   def get_name(self):
     return self.name
 
+  def __str__(self):
+    return self.get_name()
+
+  def __repr__(self):
+    return str(self)
 
   # Override these:
 
@@ -85,18 +90,21 @@ class Player:
   def player_dead(self, player, last_card):
     pass
 
-  def __str__(self):
-    return self.get_name()
-
 
 def play_game(players):
   """
   Plays a game with a list of players
   """
-  deck = list(all_cards)
+  players = list(players)
+  deck = list(full_deck)
   random.shuffle(deck)
 
   extra_card = deck.pop()
+
+  #deck, extra_card =  [3, 8, 2, 5, 4, 5, 3, 4, 7, 2, 1, 6, 1, 1, 1] , 1
+  # prints a line of code you can paste above here to repeat a game
+  print 'deck, extra_card = ', deck, ',', extra_card
+
 
   player_map = {}
   immune = set()
@@ -189,6 +197,7 @@ def play_game(players):
         kill(move.player)
       else:
         new_card = deck and deck.pop() or extra_card
+        print '  ', move.player, 'picks up', card_names[new_card]
         replace_card(move.player, new_card)
 
     if move.card == 6:

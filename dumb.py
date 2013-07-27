@@ -28,7 +28,7 @@ class Dumb(Player):
     if card == 1:
       guess = 2
 
-    return Move("I'm dumb", card, player, guess)
+    return Move("im dum", card, player, guess)
 
 #  def player_discarded(self, player, card):
 #    pass
