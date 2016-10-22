@@ -13,6 +13,7 @@ card_names = {
 
 full_deck = 5*[1] + 2*[2,3,4,5] + [6,7,8]
 targetting_cards = [1,2,3,5,6]
+# Must target someone who is not yourself
 must_target_others = [1,2,3,6]
 
 def verbose_name(card):
@@ -43,7 +44,7 @@ class Move:
   def __str__(self):
     res = card_names[self.card]
     if self.player:
-      res += ' targetting ' + str(self.player) 
+      res += ' targetting ' + str(self.player)
     if self.guess:
       res += ' guessing ' + card_names[self.guess]
 
@@ -75,9 +76,11 @@ class Player:
   def decide_turn(self, card, **info):
     return Move(8)
 
+  # Player was forced to discard a card
   def player_discarded(self, player, card):
     pass
 
+  # Player made a move with a particlar card which discards it
   def player_moved(self, player, move):
     pass
 
@@ -129,9 +132,9 @@ def play_game(players):
     move = current.decide_turn(next_card,
       immune = immune)
 
-    print current.get_name(), 
+    print current.get_name(),
     print 'has', card_names[player_cards[current]],
-    print 'picks up', card_names[next_card], 
+    print 'picks up', card_names[next_card],
     print 'plays', move
 
     if move.player in immune:
@@ -171,13 +174,16 @@ def play_game(players):
       raise Exception("Must target someone else where possible %s" % move)
 
 
+    # Guard
     if move.card == 1:
       if move.player:
         if move.guess is player_cards[move.player]:
           kill(move.player)
+    # Priest
     if move.card == 2:
       if move.player:
         current.player_revealed(move.player, player_cards[move.player])
+    # Baron
     if move.card == 3:
       if move.player:
         a, b = player_cards[current], player_cards[move.player]
@@ -185,8 +191,10 @@ def play_game(players):
           kill(move.player)
         if b > a:
           kill(current)
+    # Handmaid
     if move.card == 4:
       immune.add(current)
+    # Prince
     if move.card == 5:
       discarded = player_cards[move.player]
       for p in players:
@@ -199,14 +207,16 @@ def play_game(players):
         new_card = deck and deck.pop() or extra_card
         print '  ', move.player, 'picks up', card_names[new_card]
         replace_card(move.player, new_card)
-
+    # King
     if move.card == 6:
       if move.player:
         a, b = player_cards[move.player], player_cards[current]
         replace_card(current, a)
         replace_card(move.player, b)
+    # Countess
     if move.card == 7:
       pass
+    # Princess
     if move.card == 8:
       kill(current)
 
@@ -220,4 +230,3 @@ def play_game(players):
     print players[0], 'is the last one standing'
 
   return players[0]
-  

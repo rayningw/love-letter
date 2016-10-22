@@ -2,8 +2,9 @@ import random
 from game import *
 from dumb import Dumb
 from reasonable import Reasonable
+from ray import Ray
 
-players = [Dumb(), Dumb(), Dumb(), Reasonable()]
+players = [Dumb(), Dumb(), Ray(), Reasonable()]
 wins = {}
 for p in players:
   wins[p] = 0
